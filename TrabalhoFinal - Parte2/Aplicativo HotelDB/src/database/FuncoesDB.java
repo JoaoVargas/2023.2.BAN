@@ -1,13 +1,10 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
+import dados.*;
+
+import java.sql.*;
 
 public class FuncoesDB {
-    public FuncoesDB() {
-    }
-
     public Connection conectarDB(String nomeDB, String user, String password) {
         Connection con = null;
 
@@ -19,46 +16,104 @@ public class FuncoesDB {
             } else {
                 System.out.println("Erro: Conexão com DB");
             }
-        } catch (Exception var6) {
-            System.out.println(var6);
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
         return con;
     }
 
-    public void criarTabela(Connection con, String nomeTabela, String query) {
+//    public void criarTabela(Connection con, String nomeTabela, String query) {
+//        try {
+//            query = "CREATE TABLE " + nomeTabela + query;
+//            Statement st = con.createStatement();
+//            st.executeUpdate(query);
+//            System.out.println("Tabela criada");
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//
+//    }
+
+//    public void inserirLinha(Connection con, String nomeTabela, String nome, String endereco) {
+//        try {
+//            String query = String.format("INSERT INTO %s(nome, endereco) values('%s', '%s')", nomeTabela, nome, endereco);
+//            Statement st = con.createStatement();
+//            st.executeUpdate(query);
+//            System.out.println("Linha inserida");
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//
+//    }
+
+//    public void inserirQuarto(Connection con, String numero, String luxo, String manutencao) {
+//        try {
+//            String query = String.format("", numero, luxo, manutencao);
+//            Statement st = con.createStatement();
+//            st.executeUpdate(query);
+//            System.out.println("Linha inserida");
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//
+//    }
+
+    public ResultSet listarTabela(Connection con, String tabela, String chaveOrdem) {
         try {
-            query = "CREATE TABLE " + nomeTabela + query;
             Statement st = con.createStatement();
-            st.executeUpdate(query);
-            System.out.println("Tabela criada");
-        } catch (Exception var6) {
-            System.out.println(var6);
+
+            String query = "SELECT * FROM \"%s\" ORDER BY \"%s\" ASC ".formatted(tabela, chaveOrdem);
+
+            return st.executeQuery(query);
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
+        return null;
     }
 
-    public void inserirLinha(Connection con, String nomeTabela, String nome, String endereco) {
+    public int inserirPessoa(Connection con, Pessoa p) {
         try {
-            String query = String.format("INSERT INTO %s(nome, endereco) values('%s', '%s')", nomeTabela, nome, endereco);
-            Statement st = con.createStatement();
-            st.executeUpdate(query);
-            System.out.println("Linha inserida");
-        } catch (Exception var7) {
-            System.out.println(var7);
+            String query = "INSERT INTO \"Pessoas\" (\"nome\", \"cpf\", \"sexo\", \"cep\", \"telefone\") VALUES (?, ?, ?, ?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, p.getNome());
+            ps.setString(2, p.getCpf());
+            ps.setString(3, p.getSexo());
+            ps.setString(4, p.getCep());
+            ps.setString(5, p.getTelefone());
+
+            int chave = ps.executeUpdate();
+
+            System.out.println(chave);
+
+            return chave;
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
+        return -1;
     }
-
-    public void inserirQuarto(Connection con, String numero, String luxo, String manutencao) {
+    public int inserirCliente(Connection con, Cliente c) {
         try {
-            String query = String.format("INSERT INTO \"Quartos\" (\"numeroQuarto\", \"tipoLuxo\", \"emManutencao\") values(%s, %s, %s)", numero, luxo, manutencao);
-            Statement st = con.createStatement();
-            st.executeUpdate(query);
-            System.out.println("Linha inserida");
-        } catch (Exception var7) {
-            System.out.println(var7);
+            String query = "INSERT INTO \"Clientes\" (\"codPessoa\", \"emailPessoal\") VALUES (?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, c.getPessoa().getCodPessoa() + 1 );
+            ps.setString(2, c.getEmailPessoal());
+
+            int chave = ps.executeUpdate();
+
+            System.out.println(chave);
+
+            return chave;
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
+        return -1;
     }
+
+
 }
