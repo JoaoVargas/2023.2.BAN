@@ -3,6 +3,8 @@ package apresentacao;
 import dados.*;
 import negocio.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -67,7 +69,8 @@ public class Principal {
                 Digite a opção:
                 0 - Voltar
                 1 - Listar Todos
-                2 - Listar os que possuem Reserva""");
+                2 - Listar os que são responsáveis por alguma reserva
+                3 - Listar os que são hospedes em alguma reserva""");
     }
     public static void menuListarQuartos(){
         System.out.println("""
@@ -186,31 +189,56 @@ public class Principal {
     public static void realizarReserva(){
         limparTela();
 
-        System.out.println("Digite o numero do quarto (4 digitos):");
-        String numero = s.nextLine();
-        System.out.println("Digite se o quarto é do tipo Luxo (T/F):");
-        String luxo = s.nextLine();
-        System.out.println("Digite se o quarto está em manutenção (T/F):");
-        String manutencao = s.nextLine();
+        System.out.println("Digite a data que a Reserva esta sendo feita (aaaa-mm-dd):");
+        String dataRealizada = s.nextLine();
 
-        boolean luxo2 = false;
-        boolean manutencao2 = false;
+        Reserva r = new Reserva(dataRealizada);
+        int codReserva = sys.adicionarReserva(r);
 
-        if (Objects.equals(luxo, "T")){
-            luxo2 = true;
-        }
-        if (Objects.equals(manutencao, "T")){
-            manutencao2 = true;
-        }
-
-        Quarto q = new Quarto(numero, luxo2, manutencao2);
-        int codQuarto = sys.adicionarQuarto(q);
-
-        if(codQuarto == 0){
-            mensagemErro("Erro: Adicionar quarto(quarto)");
+        if(codReserva == 0){
+            mensagemErro("Erro: Adicionar reserva(reserva)");
             return;
         }
 
+        lisQuartosTodos();
+        System.out.println("Digite o id do quarto:");
+        int codQuarto = Integer.parseInt(s.nextLine());
+        System.out.println("Digite o dia do CheckIn (aaaa-mm-dd):");
+        String dataCheckIn = s.nextLine();
+        System.out.println("Digite o dia do CheckOut (aaaa-mm-dd):");
+        String dataCheckOut = s.nextLine();
+
+        Alocacao a = new Alocacao(codReserva, codQuarto, dataCheckIn, dataCheckOut);
+        int codAlocacao = sys.adicionarAlocacao(a);
+
+        if(codAlocacao == 0){
+            mensagemErro("Erro: Adicionar reserva(alocacao)");
+            return;
+        }
+
+        lisClientesTodos();
+        System.out.println("Digite o id do Responsável:");
+        int codResponsavel = Integer.parseInt(s.nextLine());
+
+        Responsavel re = new Responsavel(codResponsavel, codReserva);
+        sys.adicionarResponsavel(re);
+
+        if(codResponsavel == 0){
+            mensagemErro("Erro: Adicionar reserva(responsavel)");
+            return;
+        }
+
+        lisClientesTodos();
+        System.out.println("Digite o id do Hospede:");
+        int codHospede = Integer.parseInt(s.nextLine());
+
+        Hospede h = new Hospede(codHospede, codReserva);
+        sys.adicionarHospede(h);
+
+        if(codResponsavel == 0){
+            mensagemErro("Erro: Adicionar reserva(hospede)");
+            return;
+        }
     }
     public static void lisClientes(){
         limparTela();
@@ -228,12 +256,35 @@ public class Principal {
                 default -> mensagemErro("Erro: Digite um valor válido");
                 case 0 -> mensagemErro("");
                 case 1 -> lisClientesTodos();
-//                case 2 -> lisPessoasNClientes();
+                case 2 -> lisClientesHospedes();
+                case 3 -> lisClientesResponsaveis();
             }
         }
     }
     public static void lisClientesTodos(){
         sys.listarClientes();
+    }
+    public static void lisClientesHospedes(){
+        ResultSet rs = sys.listaClientesHospedes();
+
+        try {
+            while(rs.next()) {
+                System.out.println("[%s] %s - %s".formatted(rs.getInt(1), rs.getString(2), rs.getString(3)));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    public static void lisClientesResponsaveis(){
+        ResultSet rs = sys.listaClientesResponsaveis();
+
+        try {
+            while(rs.next()) {
+                System.out.println("[%s] %s - %s".formatted(rs.getInt(1), rs.getString(2), rs.getString(3)));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
     public static void lisQuartos(){
         limparTela();

@@ -213,43 +213,6 @@ public class Sistema {
         return a;
     }
 
-    private Pessoa acharPessoa(int codPessoa){
-        for (Pessoa p : listaPessoas) {
-            if (p.getCodPessoa() == codPessoa) {
-                return p;
-            }
-        }
-
-        return null;
-    }
-    private Cliente acharCliente(int codCliente){
-        for (Cliente c : listaClientes) {
-            if (c.getCodCliente() == codCliente) {
-                return c;
-            }
-        }
-
-        return null;
-    }
-    private Reserva acharReserva(int codReserva){
-        for (Reserva r : listaReservas) {
-            if (r.getCodReserva() == codReserva) {
-                return r;
-            }
-        }
-
-        return null;
-    }
-    private Quarto acharQuarto(int codQuarto){
-        for (Quarto q : listaQuartos) {
-            if (q.getCodQuarto() == codQuarto) {
-                return q;
-            }
-        }
-
-        return null;
-    }
-
     public void listarPessoas(){
         for (Pessoa p : listaPessoas) {
 //            System.out.println(p.getCodPessoa() + " " + p.getCpf() + " " + p.getNome());
@@ -312,6 +275,18 @@ public class Sistema {
 
         return chave;
     }
+    public int adicionarReserva(Reserva r){
+        int chave = db.inserirReserva(con, r);
+
+        if (chave == -1){
+            return 0;
+        }
+
+        listaReservas.clear();
+        inicializarReservas();
+
+        return chave;
+    }
     public int adicionarQuarto(Quarto q){
         int chave = db.inserirQuarto(con, q);
 
@@ -323,5 +298,48 @@ public class Sistema {
         inicializarQuartos();
 
         return chave;
+    }
+    public int adicionarAlocacao(Alocacao a){
+        int chave = db.inserirAlocacao(con, a);
+
+        if (chave == -1){
+            return 0;
+        }
+
+        listaAlocacoes.clear();
+        inicializarAlocacoes();
+
+        return chave;
+    }
+    public int adicionarResponsavel(Responsavel r){
+        int chave = db.inserirResponsavel(con, r);
+
+        if (chave == -1){
+            return 0;
+        }
+
+        listaResponsaveis.clear();
+        inicializarResponsaveis();
+
+        return chave;
+    }
+    public int adicionarHospede(Hospede h){
+        int chave = db.inserirHospede(con, h);
+
+        if (chave == -1){
+            return 0;
+        }
+
+        listaHospedes.clear();
+        inicializarHospedes();
+
+        return chave;
+    }
+
+    public ResultSet listaClientesHospedes(){
+        return db.listarClientesHospedes(con);
+    }
+    public ResultSet listaClientesResponsaveis(){
+        return db.listarClientesResponsaveis(con);
     }
 }

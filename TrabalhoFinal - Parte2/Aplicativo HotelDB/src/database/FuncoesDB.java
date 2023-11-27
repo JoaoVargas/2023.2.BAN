@@ -23,42 +23,6 @@ public class FuncoesDB {
         return con;
     }
 
-//    public void criarTabela(Connection con, String nomeTabela, String query) {
-//        try {
-//            query = "CREATE TABLE " + nomeTabela + query;
-//            Statement st = con.createStatement();
-//            st.executeUpdate(query);
-//            System.out.println("Tabela criada");
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//
-//    }
-
-//    public void inserirLinha(Connection con, String nomeTabela, String nome, String endereco) {
-//        try {
-//            String query = String.format("INSERT INTO %s(nome, endereco) values('%s', '%s')", nomeTabela, nome, endereco);
-//            Statement st = con.createStatement();
-//            st.executeUpdate(query);
-//            System.out.println("Linha inserida");
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//
-//    }
-
-//    public void inserirQuarto(Connection con, String numero, String luxo, String manutencao) {
-//        try {
-//            String query = String.format("", numero, luxo, manutencao);
-//            Statement st = con.createStatement();
-//            st.executeUpdate(query);
-//            System.out.println("Linha inserida");
-//        } catch (Exception e) {
-//            System.out.println(e);
-//        }
-//
-//    }
-
     public ResultSet listarTabela(Connection con, String tabela, String chaveOrdem) {
         try {
             Statement st = con.createStatement();
@@ -124,6 +88,29 @@ public class FuncoesDB {
 
         return -1;
     }
+    public int inserirReserva(Connection con, Reserva r) {
+        try {
+            String query = "INSERT INTO \"Reservas\" (\"dataRealizada\") VALUES (date(?))";
+
+            PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, r.getDataRealizada());
+
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+
+            int chave = 0;
+            if (rs.next()) {
+                chave = rs.getInt(1);
+            }
+
+            return chave;
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return -1;
+    }
     public int inserirQuarto(Connection con, Quarto q) {
         try {
             String query = "INSERT INTO \"Quartos\" (\"numeroQuarto\", \"tipoLuxo\", \"emManutencao\") VALUES (?, ?, ?)";
@@ -148,6 +135,113 @@ public class FuncoesDB {
         }
 
         return -1;
+    }
+    public int inserirAlocacao(Connection con, Alocacao a) {
+        try {
+            String query = "INSERT INTO \"Alocacoes\" (\"codReserva\", \"codQuarto\", \"dataCheckIn\", \"dataCheckOut\") VALUES (?, ?, date(?), date(?))";
+
+            PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, a.getCodReserva());
+            ps.setInt(2, a.getCodQuarto());
+            ps.setString(3, a.getDataCheckIn());
+            ps.setString(4, a.getDataCheckOut());
+
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+
+            int chave = 0;
+            if (rs.next()) {
+                chave = rs.getInt(1);
+            }
+
+            return chave;
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return -1;
+    }
+    public int inserirResponsavel(Connection con, Responsavel r) {
+        try {
+            String query = "INSERT INTO \"Responsaveis\" (\"codCliente\", \"codReserva\") VALUES (?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, r.getCodCliente());
+            ps.setInt(2, r.getCodReserva());
+
+            ps.executeUpdate();
+
+//            ResultSet rs = ps.getGeneratedKeys();
+//
+//            int chave = 0;
+//            if (rs.next()) {
+//                chave = rs.getInt(1);
+//            }
+
+            int chave = 1;
+            return chave;
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return -1;
+    }
+    public int inserirHospede(Connection con, Hospede h) {
+        try {
+            String query = "INSERT INTO \"Hospedes\" (\"codCliente\", \"codReserva\") VALUES (?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, h.getCodCliente());
+            ps.setInt(2, h.getCodReserva());
+
+            ps.executeUpdate();
+
+//            ResultSet rs = ps.getGeneratedKeys();
+//
+//            int chave = 0;
+//            if (rs.next()) {
+//                chave = rs.getInt(1);
+//            }
+
+            int chave = 1;
+            return chave;
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return -1;
+    }
+
+    public ResultSet listarClientesHospedes(Connection con) {
+        try {
+            String query = "SELECT * FROM \"Clientes\"  WHERE \"codCliente\" IN (SELECT \"codCliente\" FROM \"Hospedes\") ORDER BY \"codCliente\" ASC ";
+
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery(query);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            return rs;
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return null;
+    }
+    public ResultSet listarClientesResponsaveis(Connection con) {
+        try {
+            String query = "SELECT * FROM \"Clientes\"  WHERE \"codCliente\" IN (SELECT \"codCliente\" FROM \"Responsaveis\") ORDER BY \"codCliente\" ASC ";
+
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery(query);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            return rs;
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return null;
     }
 
 
