@@ -1,0 +1,610 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 16.1
+-- Dumped by pg_dump version 16.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+DROP DATABASE IF EXISTS "HotelDB-JoaoGuilhermeVargas";
+--
+-- Name: HotelDB-JoaoGuilhermeVargas; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE "HotelDB-JoaoGuilhermeVargas" WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'en_US.UTF-8';
+
+
+ALTER DATABASE "HotelDB-JoaoGuilhermeVargas" OWNER TO postgres;
+
+\connect -reuse-previous=on "dbname='HotelDB-JoaoGuilhermeVargas'"
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: Alocacoes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Alocacoes" (
+    "codReserva" integer NOT NULL,
+    "codQuarto" integer NOT NULL,
+    "dataCheckIn" date NOT NULL,
+    "dataCheckOut" date NOT NULL
+);
+
+
+ALTER TABLE public."Alocacoes" OWNER TO postgres;
+
+--
+-- Name: Clientes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Clientes" (
+    "codCliente" integer NOT NULL,
+    "codPessoa" integer NOT NULL,
+    "emailPessoal" character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public."Clientes" OWNER TO postgres;
+
+--
+-- Name: COLUMN "Clientes"."codCliente"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Clientes"."codCliente" IS 'Inteiro autoincremental que identifica cada cliente';
+
+
+--
+-- Name: COLUMN "Clientes"."codPessoa"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Clientes"."codPessoa" IS 'Chave estrangeira para relacionamento Cliente - Pessoa';
+
+
+--
+-- Name: COLUMN "Clientes"."emailPessoal"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Clientes"."emailPessoal" IS 'Email pessoal do cliente';
+
+
+--
+-- Name: Clientes_codCliente_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Clientes_codCliente_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Clientes_codCliente_seq" OWNER TO postgres;
+
+--
+-- Name: Clientes_codCliente_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Clientes_codCliente_seq" OWNED BY public."Clientes"."codCliente";
+
+
+--
+-- Name: Hospedes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Hospedes" (
+    "codCliente" integer NOT NULL,
+    "codReserva" integer NOT NULL
+);
+
+
+ALTER TABLE public."Hospedes" OWNER TO postgres;
+
+--
+-- Name: COLUMN "Hospedes"."codCliente"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Hospedes"."codCliente" IS 'Chave primaria estrangeira para relacionamento Reserva - Cliente (Hóspede)';
+
+
+--
+-- Name: COLUMN "Hospedes"."codReserva"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Hospedes"."codReserva" IS 'Chave primaria estrangeira para relacionamento Cliente (Hóspede) - Reserva';
+
+
+--
+-- Name: Pessoas; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Pessoas" (
+    "codPessoa" integer NOT NULL,
+    nome character varying(200) NOT NULL,
+    cpf character varying(11) NOT NULL,
+    sexo character varying(1) NOT NULL,
+    cep character varying(8) NOT NULL,
+    telefone character varying(11) NOT NULL
+);
+
+
+ALTER TABLE public."Pessoas" OWNER TO postgres;
+
+--
+-- Name: COLUMN "Pessoas"."codPessoa"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Pessoas"."codPessoa" IS 'Inteiro autoincremental que identifica cada pessoa';
+
+
+--
+-- Name: COLUMN "Pessoas".nome; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Pessoas".nome IS 'Nome da pessoa';
+
+
+--
+-- Name: COLUMN "Pessoas".cpf; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Pessoas".cpf IS 'CPF da pessoa';
+
+
+--
+-- Name: COLUMN "Pessoas".sexo; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Pessoas".sexo IS 'Sexo da pessoa';
+
+
+--
+-- Name: COLUMN "Pessoas".cep; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Pessoas".cep IS 'CEP da pessoa';
+
+
+--
+-- Name: COLUMN "Pessoas".telefone; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Pessoas".telefone IS 'Telefone da pessoa';
+
+
+--
+-- Name: Pessoas_codPessoa_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Pessoas_codPessoa_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Pessoas_codPessoa_seq" OWNER TO postgres;
+
+--
+-- Name: Pessoas_codPessoa_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Pessoas_codPessoa_seq" OWNED BY public."Pessoas"."codPessoa";
+
+
+--
+-- Name: Quartos; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Quartos" (
+    "codQuarto" integer NOT NULL,
+    "numeroQuarto" character varying(4) NOT NULL,
+    "tipoLuxo" boolean NOT NULL,
+    "emManutencao" boolean NOT NULL
+);
+
+
+ALTER TABLE public."Quartos" OWNER TO postgres;
+
+--
+-- Name: COLUMN "Quartos"."codQuarto"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Quartos"."codQuarto" IS 'Inteiro autoincremental que identifica cada quarto';
+
+
+--
+-- Name: COLUMN "Quartos"."numeroQuarto"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Quartos"."numeroQuarto" IS 'Número do quarto';
+
+
+--
+-- Name: COLUMN "Quartos"."tipoLuxo"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Quartos"."tipoLuxo" IS 'Booleano identificador se o quarto é do tipo luxo';
+
+
+--
+-- Name: COLUMN "Quartos"."emManutencao"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Quartos"."emManutencao" IS 'Booleano identificador se o quarto esta em manutenção';
+
+
+--
+-- Name: Quartos_codQuarto_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Quartos_codQuarto_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Quartos_codQuarto_seq" OWNER TO postgres;
+
+--
+-- Name: Quartos_codQuarto_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Quartos_codQuarto_seq" OWNED BY public."Quartos"."codQuarto";
+
+
+--
+-- Name: Reservas; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Reservas" (
+    "codReserva" integer NOT NULL,
+    "dataRealizada" date NOT NULL
+);
+
+
+ALTER TABLE public."Reservas" OWNER TO postgres;
+
+--
+-- Name: COLUMN "Reservas"."codReserva"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Reservas"."codReserva" IS 'Inteiro autoincremental que identifica cada reserva';
+
+
+--
+-- Name: COLUMN "Reservas"."dataRealizada"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Reservas"."dataRealizada" IS 'Data da realização da reserva';
+
+
+--
+-- Name: Reservas_codReserva_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Reservas_codReserva_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public."Reservas_codReserva_seq" OWNER TO postgres;
+
+--
+-- Name: Reservas_codReserva_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Reservas_codReserva_seq" OWNED BY public."Reservas"."codReserva";
+
+
+--
+-- Name: Responsaveis; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Responsaveis" (
+    "codCliente" integer NOT NULL,
+    "codReserva" integer NOT NULL
+);
+
+
+ALTER TABLE public."Responsaveis" OWNER TO postgres;
+
+--
+-- Name: COLUMN "Responsaveis"."codCliente"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Responsaveis"."codCliente" IS 'Chave estrangeira para relacionamento Reserva - Cliente(Responsável)';
+
+
+--
+-- Name: COLUMN "Responsaveis"."codReserva"; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public."Responsaveis"."codReserva" IS 'Chave estrangeira para relacionamento Cliente (Responsável) - Reserva';
+
+
+--
+-- Name: Clientes codCliente; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Clientes" ALTER COLUMN "codCliente" SET DEFAULT nextval('public."Clientes_codCliente_seq"'::regclass);
+
+
+--
+-- Name: Pessoas codPessoa; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Pessoas" ALTER COLUMN "codPessoa" SET DEFAULT nextval('public."Pessoas_codPessoa_seq"'::regclass);
+
+
+--
+-- Name: Quartos codQuarto; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Quartos" ALTER COLUMN "codQuarto" SET DEFAULT nextval('public."Quartos_codQuarto_seq"'::regclass);
+
+
+--
+-- Name: Reservas codReserva; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Reservas" ALTER COLUMN "codReserva" SET DEFAULT nextval('public."Reservas_codReserva_seq"'::regclass);
+
+
+--
+-- Data for Name: Alocacoes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public."Alocacoes" VALUES (1, 5, '2023-11-27', '2023-11-28');
+
+
+--
+-- Data for Name: Clientes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public."Clientes" VALUES (2, 2, 'c1@email.com');
+INSERT INTO public."Clientes" VALUES (3, 3, 'c2@email.com');
+
+
+--
+-- Data for Name: Hospedes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public."Hospedes" VALUES (3, 1);
+
+
+--
+-- Data for Name: Pessoas; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public."Pessoas" VALUES (2, 'Cliente 1', '12312312312', 'H', '12123123', '12112121212');
+INSERT INTO public."Pessoas" VALUES (3, 'Cliente 2', '12312312311', 'M', '12123123', '12112121212');
+
+
+--
+-- Data for Name: Quartos; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public."Quartos" VALUES (1, '1001', false, false);
+INSERT INTO public."Quartos" VALUES (2, '1002', false, false);
+INSERT INTO public."Quartos" VALUES (3, '1003', false, false);
+INSERT INTO public."Quartos" VALUES (4, '1004', false, true);
+INSERT INTO public."Quartos" VALUES (5, '1005', false, false);
+INSERT INTO public."Quartos" VALUES (6, '1006', false, false);
+INSERT INTO public."Quartos" VALUES (7, '1007', false, false);
+INSERT INTO public."Quartos" VALUES (8, '1008', false, true);
+INSERT INTO public."Quartos" VALUES (9, '1009', false, false);
+INSERT INTO public."Quartos" VALUES (10, '1010', false, false);
+INSERT INTO public."Quartos" VALUES (11, '1101', true, false);
+INSERT INTO public."Quartos" VALUES (12, '1102', true, false);
+INSERT INTO public."Quartos" VALUES (13, '1103', true, true);
+INSERT INTO public."Quartos" VALUES (14, '1104', true, false);
+INSERT INTO public."Quartos" VALUES (15, '1105', true, false);
+INSERT INTO public."Quartos" VALUES (16, '1106', true, false);
+INSERT INTO public."Quartos" VALUES (17, '1107', true, true);
+INSERT INTO public."Quartos" VALUES (18, '1108', true, false);
+INSERT INTO public."Quartos" VALUES (19, '1109', true, false);
+INSERT INTO public."Quartos" VALUES (20, '1110', true, true);
+INSERT INTO public."Quartos" VALUES (21, '2001', false, false);
+
+
+--
+-- Data for Name: Reservas; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public."Reservas" VALUES (1, '2023-11-27');
+
+
+--
+-- Data for Name: Responsaveis; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO public."Responsaveis" VALUES (2, 1);
+
+
+--
+-- Name: Clientes_codCliente_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Clientes_codCliente_seq"', 3, true);
+
+
+--
+-- Name: Pessoas_codPessoa_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Pessoas_codPessoa_seq"', 3, true);
+
+
+--
+-- Name: Quartos_codQuarto_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Quartos_codQuarto_seq"', 21, true);
+
+
+--
+-- Name: Reservas_codReserva_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Reservas_codReserva_seq"', 1, true);
+
+
+--
+-- Name: Alocacoes Alocacoes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Alocacoes"
+    ADD CONSTRAINT "Alocacoes_pkey" PRIMARY KEY ("codReserva", "codQuarto");
+
+
+--
+-- Name: Clientes Clientes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Clientes"
+    ADD CONSTRAINT "Clientes_pkey" PRIMARY KEY ("codCliente");
+
+
+--
+-- Name: Hospedes Hospedes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Hospedes"
+    ADD CONSTRAINT "Hospedes_pkey" PRIMARY KEY ("codCliente", "codReserva");
+
+
+--
+-- Name: Pessoas Pessoas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Pessoas"
+    ADD CONSTRAINT "Pessoas_pkey" PRIMARY KEY ("codPessoa");
+
+
+--
+-- Name: Quartos Quartos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Quartos"
+    ADD CONSTRAINT "Quartos_pkey" PRIMARY KEY ("codQuarto");
+
+
+--
+-- Name: Reservas Reservas_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Reservas"
+    ADD CONSTRAINT "Reservas_pkey" PRIMARY KEY ("codReserva");
+
+
+--
+-- Name: Responsaveis Responsaveis_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Responsaveis"
+    ADD CONSTRAINT "Responsaveis_pkey" PRIMARY KEY ("codCliente", "codReserva");
+
+
+--
+-- Name: Pessoas cpf_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Pessoas"
+    ADD CONSTRAINT cpf_unique UNIQUE (cpf);
+
+
+--
+-- Name: Hospedes codCliente_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Hospedes"
+    ADD CONSTRAINT "codCliente_fk" FOREIGN KEY ("codCliente") REFERENCES public."Clientes"("codCliente");
+
+
+--
+-- Name: Responsaveis codCliente_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Responsaveis"
+    ADD CONSTRAINT "codCliente_fk" FOREIGN KEY ("codCliente") REFERENCES public."Clientes"("codCliente");
+
+
+--
+-- Name: Clientes codPessoa_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Clientes"
+    ADD CONSTRAINT "codPessoa_fk" FOREIGN KEY ("codPessoa") REFERENCES public."Pessoas"("codPessoa") NOT VALID;
+
+
+--
+-- Name: Alocacoes codQuarto_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Alocacoes"
+    ADD CONSTRAINT "codQuarto_fk" FOREIGN KEY ("codQuarto") REFERENCES public."Quartos"("codQuarto");
+
+
+--
+-- Name: Hospedes codReserva_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Hospedes"
+    ADD CONSTRAINT "codReserva_fk" FOREIGN KEY ("codReserva") REFERENCES public."Reservas"("codReserva") NOT VALID;
+
+
+--
+-- Name: Responsaveis codReserva_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Responsaveis"
+    ADD CONSTRAINT "codReserva_fk" FOREIGN KEY ("codReserva") REFERENCES public."Reservas"("codReserva");
+
+
+--
+-- Name: Alocacoes codReserva_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Alocacoes"
+    ADD CONSTRAINT "codReserva_fk" FOREIGN KEY ("codReserva") REFERENCES public."Reservas"("codReserva");
+
+
+--
+-- PostgreSQL database dump complete
+--
+
