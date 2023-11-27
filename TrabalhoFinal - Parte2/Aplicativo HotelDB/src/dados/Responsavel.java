@@ -1,18 +1,18 @@
 package dados;
 
 public class Responsavel {
-    private Cliente cliente;
-    private Reserva reserva;
+    private int codCliente;
+    private int codReserva;
 
-    public Cliente getCliente() {
-        return cliente;
+    public int getCodCliente() {
+        return codCliente;
     }
-    public Reserva getReserva() {
-        return reserva;
+    public int getCodReserva() {
+        return codReserva;
     }
 
-    public Responsavel(Cliente cliente, Reserva reserva) {
-        this.cliente = cliente;
-        this.reserva = reserva;
+    public Responsavel(int codCliente, int codReserva) {
+        this.codCliente = codCliente;
+        this.codReserva = codReserva;
     }
 }

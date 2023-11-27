@@ -2,7 +2,7 @@ package dados;
 
 public class Cliente {
     private int codCliente;
-    private Pessoa pessoa;
+    private int codPessoa;
     private String emailPessoal;
 
     public int getCodCliente() {
@@ -11,15 +11,15 @@ public class Cliente {
     public void setCodCliente(int codCliente) {
         this.codCliente = codCliente;
     }
-    public Pessoa getPessoa() {
-        return pessoa;
+    public int getCodPessoa() {
+        return codPessoa;
     }
     public String getEmailPessoal() {
         return emailPessoal;
     }
 
-    public Cliente(String emailPessoal, Pessoa pessoa) {
+    public Cliente(int codPessoa, String emailPessoal) {
+        this.codPessoa = codPessoa;
         this.emailPessoal = emailPessoal;
-        this.pessoa = pessoa;
     }
 }

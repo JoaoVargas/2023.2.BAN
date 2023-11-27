@@ -3,6 +3,7 @@ package apresentacao;
 import dados.*;
 import negocio.*;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 import dados.*;
@@ -27,20 +28,19 @@ public class Principal {
                 default -> mensagemErro("Erro: Digite um valor válido");
                 case 0 -> mensagemErro("Adeus");
                 case 1 -> addCliente();
-//                case 2 -> addQuarto();
-//                case 3 -> realizarReserva();
+                case 2 -> addQuarto();
+                case 3 -> realizarReserva();
                 case 4 -> lisClientes();
                 case 5 -> lisQuartos();
-//                case 6 -> lisReservas();
+                case 6 -> lisReservas();
                 case 7 -> lisPessoas();
-//                case 8 -> lisHospedes();
-//                case 9 -> lisResponsaveis();
-//                case 10 -> lisAlocacoes();
+                case 8 -> lisHospedes();
+                case 9 -> lisResponsaveis();
+                case 10 -> lisAlocacoes();
             }
 
             limparTela();
         }
-
     }
 
     public static void limparTela(){
@@ -134,23 +134,83 @@ public class Principal {
         String cep = s.nextLine();
         System.out.println("Digite o telefone:");
         String telefone = s.nextLine();
+        System.out.println("Digite o email pessoal:");
+        String emailp = s.nextLine();
 
         Pessoa p = new Pessoa(nome, cpf, sexo, cep, telefone);
+        int codPessoa = sys.adicionarPessoa(p);
 
-        if(sys.adicionarPessoa(p) == 0){
+        if(codPessoa == 0){
             mensagemErro("Erro: Adicionar cliente(pessoa)");
             return;
         }
 
-        System.out.println("Digite o email pessoal:");
-        String emailp = s.nextLine();
+        Cliente c = new Cliente(codPessoa, emailp);
+        int codCliente = sys.adicionarCliente(c);
 
-        Cliente c = new Cliente(emailp, p);
-
-        if(sys.adicionarCliente(c) == 0){
+        if(codCliente == 0){
             mensagemErro("Erro: Adicionar cliente(cliente)");
             return;
         }
+
+    }
+    public static void addQuarto(){
+        limparTela();
+
+        System.out.println("Digite o numero do quarto (4 digitos):");
+        String numero = s.nextLine();
+        System.out.println("Digite se o quarto é do tipo Luxo (T/F):");
+        String luxo = s.nextLine();
+        System.out.println("Digite se o quarto está em manutenção (T/F):");
+        String manutencao = s.nextLine();
+
+        boolean luxo2 = false;
+        boolean manutencao2 = false;
+
+        if (Objects.equals(luxo, "T")){
+            luxo2 = true;
+        }
+        if (Objects.equals(manutencao, "T")){
+            manutencao2 = true;
+        }
+
+        Quarto q = new Quarto(numero, luxo2, manutencao2);
+        int codQuarto = sys.adicionarQuarto(q);
+
+        if(codQuarto == 0){
+            mensagemErro("Erro: Adicionar quarto(quarto)");
+            return;
+        }
+
+    }
+    public static void realizarReserva(){
+        limparTela();
+
+        System.out.println("Digite o numero do quarto (4 digitos):");
+        String numero = s.nextLine();
+        System.out.println("Digite se o quarto é do tipo Luxo (T/F):");
+        String luxo = s.nextLine();
+        System.out.println("Digite se o quarto está em manutenção (T/F):");
+        String manutencao = s.nextLine();
+
+        boolean luxo2 = false;
+        boolean manutencao2 = false;
+
+        if (Objects.equals(luxo, "T")){
+            luxo2 = true;
+        }
+        if (Objects.equals(manutencao, "T")){
+            manutencao2 = true;
+        }
+
+        Quarto q = new Quarto(numero, luxo2, manutencao2);
+        int codQuarto = sys.adicionarQuarto(q);
+
+        if(codQuarto == 0){
+            mensagemErro("Erro: Adicionar quarto(quarto)");
+            return;
+        }
+
     }
     public static void lisClientes(){
         limparTela();
@@ -198,6 +258,28 @@ public class Principal {
     public static void lisQuartosTodos(){
         sys.listarQuartos();
     }
+    public static void lisReservas(){
+        limparTela();
+
+        int escolha = -1;
+
+        while (escolha != 0) {
+            menuListarReservas();
+            System.out.println(err);
+            mensagemErro("");
+
+            escolha = Integer.parseInt(s.nextLine());
+
+            switch (escolha){
+                default -> mensagemErro("Erro: Digite um valor válido");
+                case 0 -> mensagemErro("");
+                case 1 -> lisReservasTodas();
+            }
+        }
+    }
+    public static void lisReservasTodas(){
+        sys.listarReservas();
+    }
     public static void lisPessoas(){
         limparTela();
 
@@ -220,6 +302,73 @@ public class Principal {
     }
     public static void lisPessoasTodas(){
         sys.listarPessoas();
+    }
+    public static void lisHospedes(){
+        limparTela();
+
+        int escolha = -1;
+
+        while (escolha != 0) {
+            menuListarHospedes();
+            System.out.println(err);
+            mensagemErro("");
+
+            escolha = Integer.parseInt(s.nextLine());
+
+            switch (escolha){
+                default -> mensagemErro("Erro: Digite um valor válido");
+                case 0 -> mensagemErro("");
+                case 1 -> lisHospedesTodas();
+            }
+        }
+    }
+    public static void lisHospedesTodas(){
+        sys.listarHospedes();
+    }
+    public static void lisResponsaveis(){
+        limparTela();
+
+        int escolha = -1;
+
+        while (escolha != 0) {
+            menuListarResponsaveis();
+            System.out.println(err);
+            mensagemErro("");
+
+            escolha = Integer.parseInt(s.nextLine());
+
+            switch (escolha){
+                default -> mensagemErro("Erro: Digite um valor válido");
+                case 0 -> mensagemErro("");
+                case 1 -> lisResponsaveisTodas();
+            }
+        }
+    }
+    public static void lisResponsaveisTodas(){
+        sys.listarResponsaveis();
+    }
+    public static void lisAlocacoes(){
+        limparTela();
+
+        int escolha = -1;
+
+        while (escolha != 0) {
+            menuListarAlocacoes();
+            System.out.println(err);
+            mensagemErro("");
+
+            escolha = Integer.parseInt(s.nextLine());
+
+            switch (escolha){
+                default -> mensagemErro("Erro: Digite um valor válido");
+                case 0 -> mensagemErro("");
+                case 1 -> lisAlocacoesTodas();
+//                case 2 ->
+            }
+        }
+    }
+    public static void lisAlocacoesTodas(){
+        sys.listarAlocacoes();
     }
 
 }

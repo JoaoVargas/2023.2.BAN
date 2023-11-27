@@ -61,10 +61,8 @@ public class Sistema {
                 return;
             }
 
-            ResultSetMetaData md = rs.getMetaData();
-
             while (rs.next()) {
-                listaClientes.add(criarCliente(rs.getInt(1), acharPessoa(rs.getInt(2)), rs.getString(3)));
+                listaClientes.add(criarCliente(rs.getInt(1), rs.getInt(2), rs.getString(3)));
             }
 
         } catch (Exception e) {
@@ -83,7 +81,7 @@ public class Sistema {
             ResultSetMetaData md = rs.getMetaData();
 
             while (rs.next()) {
-                listaHospedes.add(criarHospede(acharCliente(rs.getInt(1)), acharReserva(rs.getInt(2))));
+                listaHospedes.add(criarHospede(rs.getInt(1), rs.getInt(2)));
             }
 
         } catch (Exception e) {
@@ -102,7 +100,7 @@ public class Sistema {
             ResultSetMetaData md = rs.getMetaData();
 
             while (rs.next()) {
-                listaResponsaveis.add(criarResponsavel(acharCliente(rs.getInt(1)), acharReserva(rs.getInt(2))));
+                listaResponsaveis.add(criarResponsavel(rs.getInt(1), rs.getInt(2)));
             }
 
         } catch (Exception e) {
@@ -166,7 +164,7 @@ public class Sistema {
             ResultSetMetaData md = rs.getMetaData();
 
             while (rs.next()) {
-                listaAlocacoes.add(criarAlocacao(acharReserva(rs.getInt(1)), acharQuarto(rs.getInt(2)), rs.getString(3), rs.getString(4)));
+                listaAlocacoes.add(criarAlocacao(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4)));
             }
 
         } catch (Exception e) {
@@ -180,19 +178,19 @@ public class Sistema {
 
         return p;
     }
-    private Cliente criarCliente(int codCliente, Pessoa pessoa, String emailPessoal){
-        Cliente c = new Cliente(emailPessoal, pessoa);
+    private Cliente criarCliente(int codCliente, int codPessoa, String emailPessoal){
+        Cliente c = new Cliente(codPessoa, emailPessoal);
         c.setCodCliente(codCliente);
 
         return c;
     }
-    private Hospede criarHospede(Cliente cliente, Reserva reserva){
-        Hospede h = new Hospede(cliente, reserva);
+    private Hospede criarHospede(int codCliente, int codReserva){
+        Hospede h = new Hospede(codCliente, codReserva);
 
         return h;
     }
-    private Responsavel criarResponsavel(Cliente cliente, Reserva reserva){
-        Responsavel r = new Responsavel(cliente, reserva);
+    private Responsavel criarResponsavel(int codCliente, int codReserva){
+        Responsavel r = new Responsavel(codCliente, codReserva);
 
         return r;
 
@@ -209,8 +207,8 @@ public class Sistema {
 
         return q;
     }
-    private Alocacao criarAlocacao(Reserva reserva, Quarto quarto, String dataCheckIn, String dataCheckOut){
-        Alocacao a = new Alocacao(reserva, quarto, dataCheckIn, dataCheckOut);
+    private Alocacao criarAlocacao(int codReserva, int codQuarto, String dataCheckIn, String dataCheckOut){
+        Alocacao a = new Alocacao(codReserva, codQuarto, dataCheckIn, dataCheckOut);
 
         return a;
     }
@@ -261,17 +259,17 @@ public class Sistema {
     public void listarClientes(){
         for (Cliente c : listaClientes) {
 //            System.out.println(c.getCodCliente() + " " + c.getPessoa().getCodPessoa() + " " + c.getPessoa().getCpf() + " " + c.getPessoa().getNome());
-            System.out.println("[%s] ([%s] %s - %s)". formatted(c.getCodCliente(), c.getPessoa().getCodPessoa(), c.getPessoa().getCpf(), c.getPessoa().getNome()));
+            System.out.println("[%s] ([%s])". formatted(c.getCodCliente(), c.getCodPessoa()));
         }
     }
     public void listarHospedes(){
         for (Hospede h : listaHospedes) {
-            System.out.println(h.getCliente().getCodCliente() + " " + h.getReserva().getCodReserva());
+            System.out.println(h.getCodCliente() + " " + h.getCodReserva());
         }
     }
     public void listarResponsaveis(){
         for (Responsavel r : listaResponsaveis) {
-            System.out.println(r.getCliente().getCodCliente() + " " + r.getReserva().getCodReserva());
+            System.out.println(r.getCodCliente() + " " + r.getCodReserva());
         }
     }
     public void listarReservas(){
@@ -286,7 +284,7 @@ public class Sistema {
     }
     public void listarAlocacoes(){
         for (Alocacao a : listaAlocacoes) {
-            System.out.println(a.getReserva().getCodReserva() + " " + a.getQuarto().getCodQuarto() + " " + a.getDataCheckIn() + " " + a.getDataCheckOut());
+            System.out.println(a.getCodReserva() + " " + a.getCodQuarto() + " " + a.getDataCheckIn() + " " + a.getDataCheckOut());
         }
     }
 
@@ -297,11 +295,10 @@ public class Sistema {
             return 0;
         }
 
-        p.setCodPessoa(chave);
+        listaPessoas.clear();
+        inicializarPessoas();
 
-        listaPessoas.add(p);
-
-        return 1;
+        return chave;
     }
     public int adicionarCliente(Cliente c){
         int chave = db.inserirCliente(con, c);
@@ -310,10 +307,21 @@ public class Sistema {
             return 0;
         }
 
-        c.setCodCliente(chave);
+        listaClientes.clear();
+        inicializarClientes();
 
-        listaClientes.add(c);
+        return chave;
+    }
+    public int adicionarQuarto(Quarto q){
+        int chave = db.inserirQuarto(con, q);
 
-        return 1;
+        if (chave == -1){
+            return 0;
+        }
+
+        listaQuartos.clear();
+        inicializarQuartos();
+
+        return chave;
     }
 }

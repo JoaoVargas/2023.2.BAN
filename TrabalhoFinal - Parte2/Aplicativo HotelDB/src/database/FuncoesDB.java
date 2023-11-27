@@ -84,9 +84,14 @@ public class FuncoesDB {
             ps.setString(4, p.getCep());
             ps.setString(5, p.getTelefone());
 
-            int chave = ps.executeUpdate();
+            ps.executeUpdate();
 
-            System.out.println(chave);
+            ResultSet rs = ps.getGeneratedKeys();
+
+            int chave = 0;
+            if (rs.next()) {
+                chave = rs.getInt(1);
+            }
 
             return chave;
         } catch (Exception e) {
@@ -100,12 +105,42 @@ public class FuncoesDB {
             String query = "INSERT INTO \"Clientes\" (\"codPessoa\", \"emailPessoal\") VALUES (?, ?)";
 
             PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, c.getPessoa().getCodPessoa() + 1 );
+            ps.setInt(1, c.getCodPessoa());
             ps.setString(2, c.getEmailPessoal());
 
-            int chave = ps.executeUpdate();
+            ps.executeUpdate();
 
-            System.out.println(chave);
+            ResultSet rs = ps.getGeneratedKeys();
+
+            int chave = 0;
+            if (rs.next()) {
+                chave = rs.getInt(1);
+            }
+
+            return chave;
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return -1;
+    }
+    public int inserirQuarto(Connection con, Quarto q) {
+        try {
+            String query = "INSERT INTO \"Quartos\" (\"numeroQuarto\", \"tipoLuxo\", \"emManutencao\") VALUES (?, ?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, q.getNumeroQuarto());
+            ps.setBoolean(2, q.isTipoLuxo());
+            ps.setBoolean(3, q.isEmManutencao());
+
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+
+            int chave = 0;
+            if (rs.next()) {
+                chave = rs.getInt(1);
+            }
 
             return chave;
         } catch (Exception e) {

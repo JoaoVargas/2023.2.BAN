@@ -1,18 +1,18 @@
 package dados;
 
 public class Hospede {
-    private Cliente cliente;
-    private Reserva reserva;
+    private int codCliente;
+    private int codReserva;
 
-    public Cliente getCliente() {
-        return cliente;
+    public int getCodCliente() {
+        return codCliente;
     }
-    public Reserva getReserva() {
-        return reserva;
+    public int getCodReserva() {
+        return codReserva;
     }
 
-    public Hospede(Cliente cliente, Reserva reserva) {
-        this.cliente = cliente;
-        this.reserva = reserva;
+    public Hospede(int codCliente, int codReserva) {
+        this.codCliente = codCliente;
+        this.codReserva = codReserva;
     }
 }

@@ -1,16 +1,16 @@
 package dados;
 
 public class Alocacao {
-    private Reserva reserva;
-    private Quarto quarto;
+    private int codReserva;
+    private int codQuarto;
     private String dataCheckIn;
     private String dataCheckOut;
 
-    public Reserva getReserva() {
-        return reserva;
+    public int getCodReserva() {
+        return codReserva;
     }
-    public Quarto getQuarto() {
-        return quarto;
+    public int getCodQuarto() {
+        return codQuarto;
     }
     public String getDataCheckIn() {
         return dataCheckIn;
@@ -19,9 +19,9 @@ public class Alocacao {
         return dataCheckOut;
     }
 
-    public Alocacao(Reserva reserva, Quarto quarto, String dataCheckIn, String dataCheckOut) {
-        this.reserva = reserva;
-        this.quarto = quarto;
+    public Alocacao(int codReserva, int codQuarto, String dataCheckIn, String dataCheckOut) {
+        this.codReserva = codReserva;
+        this.codQuarto = codQuarto;
         this.dataCheckIn = dataCheckIn;
         this.dataCheckOut = dataCheckOut;
     }
